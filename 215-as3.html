@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yukiko Noritake — Portfolio Redesign</title>
+  <style>
+    :root {
+      --ink: #231d1b;
+      --muted: rgba(35, 29, 27, 0.68);
+      --paper: #f3ebe0;
+      --panel: rgba(251, 246, 239, 0.34);
+      --panel-strong: rgba(251, 246, 239, 0.74);
+      --shadow-lg: 0 20px 60px rgba(35, 29, 27, 0.08);
+      --shadow-md: 0 10px 28px rgba(35, 29, 27, 0.06);
+      --shadow-sm: 0 6px 16px rgba(35, 29, 27, 0.05);
+      --radius-xl: 34px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1360px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(157,79,66,0.14), transparent 24%),
+        radial-gradient(circle at 85% 16%, rgba(117,135,154,0.12), transparent 26%),
+        radial-gradient(circle at 62% 78%, rgba(194,160,98,0.10), transparent 24%),
+        linear-gradient(180deg, #f4ede3 0%, #eadfce 100%);
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .page {
+      width: min(var(--max), 94vw);
+      margin: 24px auto 36px;
+      border-radius: 36px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(251,246,239,0.76) 0%, rgba(245,237,225,0.70) 100%);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 18px 24px;
+      background: rgba(251,246,239,0.46);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.36);
+      font-size: 0.82rem;
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(35,29,27,0.78);
+      color: #fbf6ef;
+      transform: translateY(-2px);
+    }
+
+    .section-inner { padding: 84px 64px; }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(35,29,27,0.54);
+    }
+
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .section-desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      max-width: 360px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 34px;
+      padding: 30px;
+      min-height: 76vh;
+    }
+
+    .hero-left,
+    .story-image,
+    .gallery-card,
+    .feature-card,
+    .footer-box {
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-feature {
+      width: min(520px, 100%);
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-main {
+      position: relative;
+      aspect-ratio: 4 / 5.6;
+      overflow: hidden;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .hero-main img,
+    .story-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: opacity 0.28s ease, transform 0.45s ease;
+    }
+
+    .slider-top,
+    .story-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider-label,
+    .story-meta {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(35,29,27,0.56);
+    }
+
+    .slider-nav,
+    .story-nav { display: flex; gap: 8px; }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.68);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      color: var(--ink);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.9);
+    }
+
+    .slider-window,
+    .story-window { overflow: hidden; }
+
+    .hero-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 146px;
+      gap: 10px;
+      transition: transform 0.35s ease;
+    }
+
+    .hero-slide {
+      position: relative;
+      min-height: 96px;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.66;
+      transform: scale(0.985);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-slide.active,
+    .hero-slide:hover {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-slide-label {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(251,246,239,0.74);
+      backdrop-filter: blur(8px);
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: rgba(35,29,27,0.84);
+    }
+
+    .slider-caption-wrap {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .slider-index {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.28rem;
+      color: rgba(35,29,27,0.56);
+      line-height: 0.9;
+    }
+
+    .slider-caption strong {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(35,29,27,0.7);
+      margin-bottom: 2px;
+    }
+
+    .slider-caption p {
+      font-size: 0.72rem;
+      color: rgba(35,29,27,0.74);
+      line-height: 1.24;
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 40px;
+    }
+
+    .hero-right h1 {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      font-size: 1.02rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+      max-width: none;
+    }
+
+    .hero-right p,
+    .split-card p,
+    .story-copy p,
+    .card-caption p,
+    .feature-overlay p,
+    .footer-copy p {
+      font-size: 0.92rem;
+      line-height: 1.58;
+      color: var(--muted);
+    }
+
+    .hero-about {
+      display: grid;
+      gap: 28px;
+      max-width: 660px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .button:hover { transform: translateY(-2px); }
+    .button.primary { background: rgba(35,29,27,0.84); color: #fbf6ef; }
+    .button.secondary { background: rgba(255,255,255,0.58); }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 44px;
+    }
+
+    .split-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .capsules {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .capsule {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.48);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(35,29,27,0.72);
+    }
+
+    .story-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .story-image {
+      position: sticky;
+      top: 92px;
+      min-height: 500px;
+      max-height: calc(100vh - 140px);
+      overflow: hidden;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.20);
+    }
+
+    .story-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .story-top strong {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(35,29,27,0.56);
+      margin-bottom: 4px;
+    }
+
+    .story-top p { max-width: 360px; font-size: 0.82rem; color: var(--muted); }
+
+    .story-dots {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .story-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(35,29,27,0.16);
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .story-dot.active {
+      background: rgba(35,29,27,0.72);
+      transform: scale(1.2);
+    }
+
+    .story-track {
+      display: flex;
+      transition: transform 0.42s ease;
+      width: 100%;
+    }
+
+    .story-card {
+      min-width: 100%;
+      opacity: 0.66;
+      transition: opacity 0.22s ease;
+    }
+
+    .story-card.active { opacity: 1; }
+
+    .story-index {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(117,135,154,0.9);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .story-copy h3 {
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin-bottom: 8px;
+      max-width: 14ch;
+    }
+
+    .story-copy p { font-size: 0.82rem; line-height: 1.45; }
+
+    .story-tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.5);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(35,29,27,0.76);
+    }
+
+    .series-gallery {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(160px, 180px);
+      gap: 12px;
+      overflow-x: auto;
+      padding: 16px 0 4px;
+    }
+
+    .series-gallery::-webkit-scrollbar { height: 8px; }
+    .series-gallery::-webkit-scrollbar-thumb {
+      background: rgba(35,29,27,0.18);
+      border-radius: 999px;
+    }
+
+    .series-thumb {
+      overflow: hidden;
+      border-radius: 14px;
+      background: rgba(251,246,239,0.28);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .series-thumb:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .series-thumb img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .gallery-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(220px, 22vw);
+      gap: 20px;
+      overflow-x: auto;
+      padding: 4px 2px 8px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .gallery-track::-webkit-scrollbar { height: 10px; }
+    .gallery-track::-webkit-scrollbar-thumb {
+      background: rgba(35,29,27,0.22);
+      border-radius: 999px;
+    }
+
+    .gallery-card {
+      scroll-snap-align: start;
+      overflow: hidden;
+      border-radius: 18px;
+      background: rgba(251,246,239,0.28);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .gallery-card img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .gallery-card.wide img { aspect-ratio: 3 / 2; }
+
+    .card-caption {
+      padding: 12px 14px 14px;
+    }
+
+    .card-caption h3,
+    .feature-overlay h3 {
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .feature-card {
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+      border-radius: 18px;
+      background: rgba(251,246,239,0.28);
+    }
+
+    .feature-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .feature-card:hover img { transform: scale(1.04); }
+
+    .feature-overlay {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(251,246,239,0.74);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.24s ease, transform 0.24s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-card:hover .feature-overlay {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .footer-box {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: start;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .footer-copy h2 {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      font-size: 0.98rem;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: 0;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .split-grid,
+      .story-layout,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+      .section-inner { padding: 60px 34px; }
+      .hero { padding: 22px; }
+      .story-image {
+        position: relative;
+        top: 0;
+        min-height: 320px;
+        max-height: 62vh;
+      }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .hero-right { padding-right: 0; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero { padding: 14px; }
+      .section-inner { padding: 46px 20px; }
+      .hero-track { grid-auto-columns: 130px; }
+      .gallery-track { grid-auto-columns: 72vw; }
+      .feature-grid,
+      .split-grid { grid-template-columns: 1fr; }
+      .series-gallery { grid-auto-columns: 140px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="#author">YUKIKO NORITAKE</a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#author">About</a>
+        <a href="#story">Personal Work</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#featured">Editorial</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-left">
+          <div class="hero-feature">
+            <div class="hero-main">
+              <img id="heroMainImage" src="https://static.wixstatic.com/media/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg/v1/fill/w_900,h_1260,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg" alt="Artist portrait" />
+            </div>
+
+            <div class="slider-top">
+              <div class="slider-label">Selected series</div>
+              <div class="slider-nav">
+                <button class="icon-btn" id="heroPrev" aria-label="Previous">←</button>
+                <button class="icon-btn" id="heroNext" aria-label="Next">→</button>
+              </div>
+            </div>
+
+            <div class="slider-window">
+              <div class="hero-track" id="heroTrack">
+                <article class="hero-slide active" data-title="Artist portrait" data-text="Paris-based artist and illustrator." data-image="https://static.wixstatic.com/media/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg/v1/fill/w_900,h_1260,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg">
+                  <img src="https://static.wixstatic.com/media/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg/v1/fill/w_600,h_420,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f4efd6_51627c6459a24e2f93db59e8a5629b36~mv2.jpeg" alt="Artist portrait" />
+                  <div class="hero-slide-label">Artist portrait</div>
+                </article>
+                <article class="hero-slide" data-title="Interior / Design" data-text="Personal work" data-image="https://static.wixstatic.com/media/f4efd6_9e02f8e94498465a8b24bbb317640994~mv2.jpg/v1/crop/x_0%2Cy_27%2Cw_886%2Ch_1104/fill/w_900%2Ch_1120%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_9e02f8e94498465a8b24bbb317640994~mv2.jpg">
+                  <img src="https://static.wixstatic.com/media/f4efd6_9e02f8e94498465a8b24bbb317640994~mv2.jpg/v1/crop/x_0%2Cy_27%2Cw_886%2Ch_1104/fill/w_600%2Ch_420%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_9e02f8e94498465a8b24bbb317640994~mv2.jpg" alt="Interior / Design work" />
+                  <div class="hero-slide-label">Interior / Design</div>
+                </article>
+                <article class="hero-slide" data-title="Portrait / Fashion" data-text="Personal work" data-image="https://static.wixstatic.com/media/f4efd6_06139e30331549be81f5965d7a28437d~mv2.jpg/v1/crop/x_29%2Cy_10%2Cw_2426%2Ch_3057/fill/w_900%2Ch_1134%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Mode3.jpg">
+                  <img src="https://static.wixstatic.com/media/f4efd6_06139e30331549be81f5965d7a28437d~mv2.jpg/v1/crop/x_29%2Cy_10%2Cw_2426%2Ch_3057/fill/w_600%2Ch_420%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Mode3.jpg" alt="Portrait / Fashion work" />
+                  <div class="hero-slide-label">Portrait / Fashion</div>
+                </article>
+                <article class="hero-slide" data-title="Louis Vuitton City Book Paris" data-text="Editorial" data-image="https://static.wixstatic.com/media/f4efd6_65599057ff4b44f18e04651e78043b51~mv2.jpeg/v1/fill/w_900%2Ch_900%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_65599057ff4b44f18e04651e78043b51~mv2.jpeg">
+                  <img src="https://static.wixstatic.com/media/f4efd6_65599057ff4b44f18e04651e78043b51~mv2.jpeg/v1/fill/w_600%2Ch_420%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_65599057ff4b44f18e04651e78043b51~mv2.jpeg" alt="Louis Vuitton City Book Paris" />
+                  <div class="hero-slide-label">Louis Vuitton City Book Paris</div>
+                </article>
+              </div>
+            </div>
+
+            <div class="slider-caption-wrap">
+              <div class="slider-index" id="heroCaptionIndex">01</div>
+              <div class="slider-caption">
+                <strong id="heroCaptionTitle">Artist portrait</strong>
+                <p id="heroCaptionText">Paris-based artist and illustrator.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <span class="kicker">About</span>
+          <h1>Yukiko Noritake</h1>
+          <div class="hero-about">
+            <p>Yukiko Noritake is a Paris-based artist. Originally from Japan, she studied French language and culture at university before following her true calling and fully dedicating herself to her artistic career. She later studied illustration in Paris and began her professional practice in 2018. The publication of several books by French publishers marked the start of her career.</p>
+            <p>She has developed a spontaneous approach to acrylic painting, enriched by expressive line work. Her visual world draws on a range of inspirations, including travel, interior spaces, both historical and contemporary art, as well as traditional craftsmanship from different cultures.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="author">
+        <div class="section-inner">
+          <div class="section-head reveal">
+            <div>
+              <span class="kicker">Profile</span>
+              <h2>Artist overview</h2>
+            </div>
+            <p class="section-desc">Practice spanning personal work, exhibition, digital, editorial, product and packaging, VM, and book projects.</p>
+          </div>
+
+          <div class="split-grid">
+            <article class="split-card reveal">
+              <h3>Biography</h3>
+              <p>Paris-based artist from Japan, active professionally since 2018.</p>
+              <div class="capsules">
+                <span class="capsule">Paris-based</span>
+                <span class="capsule">Originally from Japan</span>
+                <span class="capsule">Since 2018</span>
+              </div>
+            </article>
+            <article class="split-card reveal">
+              <h3>Visual approach</h3>
+              <p>Acrylic painting and expressive line work shaped by interiors, travel, art history, and craft.</p>
+              <div class="capsules">
+                <span class="capsule">Acrylic</span>
+                <span class="capsule">Expressive line</span>
+                <span class="capsule">Interiors and travel</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="story">
+        <div class="section-inner">
+          <div class="section-head reveal">
+            <div>
+              <span class="kicker">Personal work</span>
+              <h2>Personal work</h2>
+            </div>
+          </div>
+
+          <div class="story-layout">
+            <div class="story-image reveal">
+              <img id="storyImage" src="https://static.wixstatic.com/media/f4efd6_75a7174c18e4425290ec7f11d6e3ca14~mv2.jpg/v1/crop/x_0%2Cy_26%2Cw_2952%2Ch_2063/fill/w_617%2Ch_432%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/La%20soir%C3%A9e_Bas%20qualit%C3%A9.jpg" alt="Interior / Design" />
+            </div>
+
+            <div>
+              <div class="story-top reveal">
+                <div>
+                  <strong>Personal work series</strong>
+                  <p>Interior / Design, Exterior / Landscape, Floral / Still life, Portrait / Fashion, Paris.</p>
+                </div>
+                <div class="story-dots" id="seriesDots">
+                  <span class="story-dot active"></span>
+                  <span class="story-dot"></span>
+                  <span class="story-dot"></span>
+                  <span class="story-dot"></span>
+                  <span class="story-dot"></span>
+                </div>
+              </div>
+
+              <div class="story-controls reveal">
+                <div class="story-meta" id="storyMeta">Interior / Design</div>
+                <div class="story-nav">
+                  <button class="icon-btn" id="storyPrev" aria-label="Previous series">←</button>
+                  <button class="icon-btn" id="storyNext" aria-label="Next series">→</button>
+                </div>
+              </div>
+
+              <div class="story-window reveal">
+                <div class="story-track" id="storyTrack">
+                  <article class="story-card active">
+                    <div class="story-copy">
+                      <span class="story-index">01</span>
+                      <h3>Interior / Design</h3>
+                      <p>Personal work</p>
+                      <span class="story-tag">3 images</span>
+                      <div class="series-gallery">
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_75a7174c18e4425290ec7f11d6e3ca14~mv2.jpg/v1/crop/x_0%2Cy_26%2Cw_2952%2Ch_2063/fill/w_617%2Ch_432%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/La%20soir%C3%A9e_Bas%20qualit%C3%A9.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_75a7174c18e4425290ec7f11d6e3ca14~mv2.jpg/v1/crop/x_0%2Cy_26%2Cw_2952%2Ch_2063/fill/w_420%2Ch_300%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/La%20soir%C3%A9e_Bas%20qualit%C3%A9.jpg" alt="Interior / Design 1" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_215712d733ea468c80c94bb269948ef7~mv2.jpg/v1/crop/x_0%2Cy_0%2Cw_2702%2Ch_3424/fill/w_304%2Ch_385%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Coin%20japonais_bas%20qualit%C3%A9.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_215712d733ea468c80c94bb269948ef7~mv2.jpg/v1/crop/x_0%2Cy_0%2Cw_2702%2Ch_3424/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Coin%20japonais_bas%20qualit%C3%A9.jpg" alt="Interior / Design 2" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_55d000aa2c9245dd8e1a5ee85d2778a8~mv2.jpg/v1/crop/x_32%2Cy_0%2Cw_2417%2Ch_3071/fill/w_304%2Ch_385%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Sisters.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_55d000aa2c9245dd8e1a5ee85d2778a8~mv2.jpg/v1/crop/x_32%2Cy_0%2Cw_2417%2Ch_3071/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Sisters.jpg" alt="Interior / Design 3" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="story-card">
+                    <div class="story-copy">
+                      <span class="story-index">02</span>
+                      <h3>Exterior / Landscape</h3>
+                      <p>Personal work</p>
+                      <span class="story-tag">3 images</span>
+                      <div class="series-gallery">
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_6203527339884e5baf57f600e236f6ee~mv2.jpg/v1/fill/w_900,h_1269,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Faroe%20Islands%201_300dpi.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_6203527339884e5baf57f600e236f6ee~mv2.jpg/v1/fill/w_420,h_520,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Faroe%20Islands%201_300dpi.jpg" alt="Exterior / Landscape 1" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_60e1e145d8544afca4706110e60d5cd0~mv2.jpg/v1/fill/w_303%2Ch_378%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Sea%20side_300dpi.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_60e1e145d8544afca4706110e60d5cd0~mv2.jpg/v1/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Sea%20side_300dpi.jpg" alt="Exterior / Landscape 2" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_5b4ea4324b634924bae5849b5dee1699~mv2.jpg/v1/crop/x_0%2Cy_122%2Cw_2470%2Ch_3374/fill/w_302%2Ch_412%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Paysage5.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_5b4ea4324b634924bae5849b5dee1699~mv2.jpg/v1/crop/x_0%2Cy_122%2Cw_2470%2Ch_3374/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Paysage5.jpg" alt="Exterior / Landscape 3" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="story-card">
+                    <div class="story-copy">
+                      <span class="story-index">03</span>
+                      <h3>Floral / Still life</h3>
+                      <p>Personal work</p>
+                      <span class="story-tag">3 images</span>
+                      <div class="series-gallery">
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_dd6ac3f53d3b43a887f3fc7f01c23b87~mv2.jpg/v1/fill/w_301%2Ch_400%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_dd6ac3f53d3b43a887f3fc7f01c23b87~mv2.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_dd6ac3f53d3b43a887f3fc7f01c23b87~mv2.jpg/v1/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_dd6ac3f53d3b43a887f3fc7f01c23b87~mv2.jpg" alt="Floral / Still life 1" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_5363bedcdde54bec823d0c578915a78a~mv2.jpg/v1/crop/x_17%2Cy_0%2Cw_3474%2Ch_3508/fill/w_301%2Ch_304%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Motif6_Noir.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_5363bedcdde54bec823d0c578915a78a~mv2.jpg/v1/crop/x_17%2Cy_0%2Cw_3474%2Ch_3508/fill/w_420%2Ch_420%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Motif6_Noir.jpg" alt="Floral / Still life 2" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_95e7d3c08e064a08a180b7142b36adb5~mv2.jpg/v1/crop/x_0%2Cy_50%2Cw_3387%2Ch_3386/fill/w_301%2Ch_304%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Motif4.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_95e7d3c08e064a08a180b7142b36adb5~mv2.jpg/v1/crop/x_0%2Cy_50%2Cw_3387%2Ch_3386/fill/w_420%2Ch_420%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Motif4.jpg" alt="Floral / Still life 3" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="story-card">
+                    <div class="story-copy">
+                      <span class="story-index">04</span>
+                      <h3>Portrait / Fashion</h3>
+                      <p>Personal work</p>
+                      <span class="story-tag">3 images</span>
+                      <div class="series-gallery">
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_8f4c881f0ad149be8486e62767bdf054~mv2.jpg/v1/crop/x_0%2Cy_0%2Cw_2453%2Ch_3070/fill/w_303%2Ch_379%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Fashion%20portrait.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_8f4c881f0ad149be8486e62767bdf054~mv2.jpg/v1/crop/x_0%2Cy_0%2Cw_2453%2Ch_3070/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Fashion%20portrait.jpg" alt="Portrait / Fashion 1" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_06139e30331549be81f5965d7a28437d~mv2.jpg/v1/crop/x_29%2Cy_10%2Cw_2426%2Ch_3057/fill/w_900%2Ch_1134%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Mode3.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_06139e30331549be81f5965d7a28437d~mv2.jpg/v1/crop/x_29%2Cy_10%2Cw_2426%2Ch_3057/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Mode3.jpg" alt="Portrait / Fashion 2" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_0c2abf5dc032405a82714377ac36776b~mv2.jpg/v1/fill/w_303%2Ch_379%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Hanae_bas%20r%C3%A9solution.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_0c2abf5dc032405a82714377ac36776b~mv2.jpg/v1/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Hanae_bas%20r%C3%A9solution.jpg" alt="Portrait / Fashion 3" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="story-card">
+                    <div class="story-copy">
+                      <span class="story-index">05</span>
+                      <h3>Paris</h3>
+                      <p>Personal work</p>
+                      <span class="story-tag">3 images</span>
+                      <div class="series-gallery">
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_e3b6e63c845349be8aedfdc3d61a350e~mv2.jpg/v1/fill/w_304%2Ch_385%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_e3b6e63c845349be8aedfdc3d61a350e~mv2.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_e3b6e63c845349be8aedfdc3d61a350e~mv2.jpg/v1/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_e3b6e63c845349be8aedfdc3d61a350e~mv2.jpg" alt="Paris 1" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_6ceb76c0f22b461ba1471836d37604da~mv2.jpg/v1/fill/w_302%2Ch_385%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_6ceb76c0f22b461ba1471836d37604da~mv2.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_6ceb76c0f22b461ba1471836d37604da~mv2.jpg/v1/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_6ceb76c0f22b461ba1471836d37604da~mv2.jpg" alt="Paris 2" />
+                        </button>
+                        <button class="series-thumb" type="button" data-story-image="https://static.wixstatic.com/media/f4efd6_3ffdddabbac74de98d9c1f7140387184~mv2.jpg/v1/crop/x_0%2Cy_6%2Cw_869%2Ch_1119/fill/w_298%2Ch_385%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_3ffdddabbac74de98d9c1f7140387184~mv2.jpg">
+                          <img src="https://static.wixstatic.com/media/f4efd6_3ffdddabbac74de98d9c1f7140387184~mv2.jpg/v1/crop/x_0%2Cy_6%2Cw_869%2Ch_1119/fill/w_420%2Ch_520%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_3ffdddabbac74de98d9c1f7140387184~mv2.jpg" alt="Paris 3" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery">
+        <div class="section-inner">
+          <div class="section-head reveal">
+            <div>
+              <span class="kicker">Digital</span>
+              <h2>Digital</h2>
+            </div>
+            <p class="section-desc">Brand communication and digital campaign work.</p>
+          </div>
+
+          <div class="gallery-track reveal">
+            <article class="gallery-card wide">
+              <img src="https://static.wixstatic.com/media/f4efd6_1812072b3a4c42a29d6ce8e00bb3b31c~mv2.jpg/v1/fill/w_807%2Ch_570%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_1812072b3a4c42a29d6ce8e00bb3b31c~mv2.jpg" alt="BELMOND British Pullman - CELIA" />
+              <div class="card-caption">
+                <h3>BELMOND British Pullman - CELIA</h3>
+                <p>Illustrations created for the launch of the British Pullman’s newest carriage, Celia.</p>
+              </div>
+            </article>
+
+            <article class="gallery-card wide">
+              <img src="https://static.wixstatic.com/media/f4efd6_adb77ed64e36469886c7c57d8c15399af000.jpg/v1/fill/w_923%2Ch_521%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_adb77ed64e36469886c7c57d8c15399af000.jpg" alt="PIAGET Holiday season's campaign" />
+              <div class="card-caption">
+                <h3>PIAGET Holiday</h3>
+                <p>Series of illustrations created for Piaget’s Winter 2023 campaign.</p>
+              </div>
+            </article>
+
+            <article class="gallery-card wide">
+              <img src="https://static.wixstatic.com/media/f4efd6_47f5d0dc93e548c392d000c6f1c16fc1~mv2.jpeg/v1/crop/x_0%2Cy_344%2Cw_2362%2Ch_1528/fill/w_912%2Ch_590%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_47f5d0dc93e548c392d000c6f1c16fc1~mv2.jpeg" alt="PIAGET Chinese New Year campaign" />
+              <div class="card-caption">
+                <h3>PIAGET Chinese New Year</h3>
+                <p>Series of illustrations created for Piaget’s Chinese New Year 2024 campaign.</p>
+              </div>
+            </article>
+
+            <article class="gallery-card wide">
+              <img src="https://static.wixstatic.com/media/f4efd6_b054983c139341cebd6c5caca7de7cbcf000.jpg/v1/fill/w_890%2Ch_503%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_b054983c139341cebd6c5caca7de7cbcf000.jpg" alt="PIAGET Ramadan campaign" />
+              <div class="card-caption">
+                <h3>PIAGET Ramadan</h3>
+                <p>Series of illustrations created for Piaget’s Ramadan 2024 campaign.</p>
+              </div>
+            </article>
+
+            <article class="gallery-card wide">
+              <img src="https://static.wixstatic.com/media/f4efd6_02a9d9aea68a45d2b4e46def4f31bf93~mv2.jpeg/v1/crop/x_0%2Cy_407%2Cw_2126%2Ch_1371/fill/w_912%2Ch_588%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/IMG_3199.jpeg" alt="PIAGET Summer campaign" />
+              <div class="card-caption">
+                <h3>PIAGET Summer</h3>
+                <p>Series of illustrations created for Piaget’s Summer campaign.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="featured">
+        <div class="section-inner">
+          <div class="section-head reveal">
+            <div>
+              <span class="kicker">Editorial</span>
+              <h2>Editorial</h2>
+            </div>
+            <p class="section-desc">Covers, guide books, posters, greeting cards, and magazine commissions.</p>
+          </div>
+
+          <div class="gallery-track reveal">
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_ffb884881bab403d96c475913e0a63bb~mv2.jpeg/v1/crop/x_0%2Cy_260%2Cw_4724%2Ch_1833/fill/w_1018%2Ch_395%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_ffb884881bab403d96c475913e0a63bb~mv2.jpeg" alt="Louis Vuitton City Book Paris" />
+              <div class="card-caption"><h3>Louis Vuitton City Book Paris</h3><p>Cover and pages</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_41ce95da55ee42169e1d0f210eb3b47d~mv2.jpeg/v1/crop/x_0%2Cy_75%2Cw_3126%2Ch_2377/fill/w_544%2Ch_414%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_41ce95da55ee42169e1d0f210eb3b47d~mv2.jpeg" alt="Les Grandes Tables du Monde" />
+              <div class="card-caption"><h3>Les Grandes Tables du Monde</h3><p>Guide cover</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_b2acf7298e7c4aa2a0458b995b8b22bd~mv2.jpeg/v1/crop/x_69%2Cy_0%2Cw_1528%2Ch_2110/fill/w_270%2Ch_375%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_b2acf7298e7c4aa2a0458b995b8b22bd~mv2.jpeg" alt="Les Échos SL — Cover December 2023" />
+              <div class="card-caption"><h3>Les Échos SL — Cover December 2023</h3><p>Editorial cover</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_2f531754769f467895758777e9f6076c~mv2.png/v1/fill/w_270%2Ch_375%2Cal_c%2Cq_85%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/PNG%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8.png" alt="Les Échos SL — Cover December 2021" />
+              <div class="card-caption"><h3>Les Échos SL — Cover December 2021</h3><p>Editorial cover</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_6251179cae9849d99206f7ecbbacc9e8~mv2.jpg/v1/fill/w_278%2Ch_375%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/HD_plein%20page.jpg" alt="Les Échos SL : Spécial Vin" />
+              <div class="card-caption"><h3>Les Échos SL : Spécial Vin</h3><p>Wine-focused article</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_53858e6142014056b658140305d6ea4b~mv2.jpg/v1/fill/w_292%2Ch_310%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Les%20%C3%89chos%20start%20HD.jpg" alt="Les Échos Start" />
+              <div class="card-caption"><h3>Les Échos Start</h3><p>Cover</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_7e15951fe10d4365a09da7144540c672~mv2.jpg/v1/fill/w_355%2Ch_310%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_7e15951fe10d4365a09da7144540c672~mv2.jpg" alt="VISA Platinum" />
+              <div class="card-caption"><h3>VISA Platinum</h3><p>Editorial illustration</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_a64eda5527494de88b08d2438c33c212~mv2.jpg/v1/crop/x_52%2Cy_174%2Cw_2370%2Ch_3282/fill/w_298%2Ch_414%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_a64eda5527494de88b08d2438c33c212~mv2.jpg" alt="FICOFI Anniversary Poster" />
+              <div class="card-caption"><h3>FICOFI Anniversary Poster</h3><p>Anniversary poster</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_b366a5d7cd504c0abca8bffba9331b46~mv2.jpg/v1/fill/w_493%2Ch_326%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/Carte%20de%20voeux%20Garance.jpg" alt="Garance Greeting Card" />
+              <div class="card-caption"><h3>Garance Greeting Card</h3><p>Greeting card</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_60726128010c4ceca54f9d99e6c32ea1~mv2.jpg/v1/crop/x_16%2Cy_0%2Cw_2464%2Ch_3508/fill/w_219%2Ch_310%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_60726128010c4ceca54f9d99e6c32ea1~mv2.jpg" alt="Charles Schwab / Onward" />
+              <div class="card-caption"><h3>Charles Schwab / Onward</h3><p>Business launch article</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_e0da63f469af4bbd9f830b22300463c7~mv2.jpeg/v1/crop/x_161%2Cy_185%2Cw_2206%2Ch_3074/fill/w_204%2Ch_284%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_e0da63f469af4bbd9f830b22300463c7~mv2.jpeg" alt="POPEYE" />
+              <div class="card-caption"><h3>POPEYE</h3><p>Portraits</p></div>
+            </article>
+
+            <article class="gallery-card">
+              <img src="https://static.wixstatic.com/media/f4efd6_c3fd049d9e814a85b13d436e73059a70~mv2.jpg/v1/fill/w_419%2Ch_279%2Cal_c%2Cq_80%2Cusm_0.66_1.00_0.01%2Cenc_avif%2Cquality_auto/f4efd6_c3fd049d9e814a85b13d436e73059a70~mv2.jpg" alt="Bloomberg Businessweek" />
+              <div class="card-caption"><h3>Bloomberg Businessweek</h3><p>New Economy Catalysts</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="section-inner">
+          <div class="footer-box reveal">
+            <div class="footer-copy">
+              <span class="kicker">Contact</span>
+              <div style="display:grid; gap:56px; max-width:880px;">
+                <div style="display:grid; gap:18px;">
+                  <h2>Contact</h2>
+                  <div style="display:grid; gap:10px;">
+                    <p style="font-size:0.98rem; text-transform:uppercase; letter-spacing:0.01em; color:rgba(35,29,27,0.82);">Yukiko Noritake</p>
+                    <p style="font-size:0.98rem; color:rgba(35,29,27,0.78);">yukkosartpost@gmail.com</p>
+                  </div>
+                </div>
+
+                <div style="display:grid; gap:22px;">
+                  <h2>Representation</h2>
+                  <div style="display:grid; gap:10px;">
+                    <p style="font-size:0.98rem; text-transform:uppercase; letter-spacing:0.01em; color:rgba(35,29,27,0.82);">Costume 3 Pieces Agency - France, Japan, UK, EU and Asia</p>
+                    <p style="font-size:0.98rem; color:rgba(35,29,27,0.78);">contact@costume3pieces.com</p>
+                  </div>
+                  <div style="display:grid; gap:10px;">
+                    <p style="font-size:0.98rem; text-transform:uppercase; letter-spacing:0.01em; color:rgba(35,29,27,0.82);">Garance Illustration Agency - US</p>
+                    <p style="font-size:0.98rem; color:rgba(35,29,27,0.78);">contact@garance-illustration.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const navLinks = document.querySelectorAll('.nav a');
+    const sections = document.querySelectorAll('main section');
+    const reveals = document.querySelectorAll('.reveal');
+
+    const heroMainImage = document.getElementById('heroMainImage');
+    const heroCaptionIndex = document.getElementById('heroCaptionIndex');
+    const heroCaptionTitle = document.getElementById('heroCaptionTitle');
+    const heroCaptionText = document.getElementById('heroCaptionText');
+    const heroTrack = document.getElementById('heroTrack');
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    const heroPrev = document.getElementById('heroPrev');
+    const heroNext = document.getElementById('heroNext');
+    let heroIndex = 0;
+
+    function updateHeroSlide(index) {
+      heroSlides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      const activeSlide = heroSlides[index];
+      if (!activeSlide) return;
+      heroMainImage.style.opacity = '0.4';
+      heroMainImage.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        heroMainImage.src = activeSlide.dataset.image;
+        heroCaptionIndex.textContent = String(index + 1).padStart(2, '0');
+        heroCaptionTitle.textContent = activeSlide.dataset.title;
+        heroCaptionText.textContent = activeSlide.dataset.text;
+        heroMainImage.style.opacity = '1';
+        heroMainImage.style.transform = 'scale(1)';
+      }, 140);
+      const slideWidth = (heroSlides[0]?.offsetWidth || 146) + 10;
+      const visibleOffset = Math.max(0, Math.min(index - 1, heroSlides.length - 2));
+      heroTrack.style.transform = `translateX(-${visibleOffset * slideWidth}px)`;
+    }
+
+    heroSlides.forEach((slide, index) => {
+      slide.addEventListener('click', () => {
+        heroIndex = index;
+        updateHeroSlide(heroIndex);
+      });
+    });
+
+    heroPrev.addEventListener('click', () => {
+      heroIndex = (heroIndex - 1 + heroSlides.length) % heroSlides.length;
+      updateHeroSlide(heroIndex);
+    });
+
+    heroNext.addEventListener('click', () => {
+      heroIndex = (heroIndex + 1) % heroSlides.length;
+      updateHeroSlide(heroIndex);
+    });
+
+    const storyImage = document.getElementById('storyImage');
+    const storyTrack = document.getElementById('storyTrack');
+    const storyPrev = document.getElementById('storyPrev');
+    const storyNext = document.getElementById('storyNext');
+    const storyDots = document.querySelectorAll('.story-dot');
+    const storyCards = document.querySelectorAll('.story-card');
+    const storyMeta = document.getElementById('storyMeta');
+    let storyIndex = 0;
+
+    function setStoryImage(newImage) {
+      if (!newImage) return;
+      storyImage.style.opacity = '0.3';
+      storyImage.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        storyImage.src = newImage;
+        storyImage.style.opacity = '1';
+        storyImage.style.transform = 'scale(1)';
+      }, 140);
+    }
+
+    function bindStoryThumbs() {
+      document.querySelectorAll('[data-story-image]').forEach((thumb) => {
+        thumb.addEventListener('click', () => {
+          setStoryImage(thumb.getAttribute('data-story-image'));
+        });
+      });
+    }
+
+    function updateStory(index) {
+      storyCards.forEach((card, i) => card.classList.toggle('active', i === index));
+      storyDots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      storyTrack.style.transform = `translateX(-${index * 100}%)`;
+      const activeCard = storyCards[index];
+      if (!activeCard) return;
+      const title = activeCard.querySelector('h3');
+      if (title && storyMeta) storyMeta.textContent = title.textContent;
+      const firstThumb = activeCard.querySelector('[data-story-image]');
+      if (firstThumb) setStoryImage(firstThumb.getAttribute('data-story-image'));
+    }
+
+    storyPrev.addEventListener('click', () => {
+      storyIndex = (storyIndex - 1 + storyCards.length) % storyCards.length;
+      updateStory(storyIndex);
+    });
+
+    storyNext.addEventListener('click', () => {
+      storyIndex = (storyIndex + 1) % storyCards.length;
+      updateStory(storyIndex);
+    });
+
+    storyDots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        storyIndex = index;
+        updateStory(storyIndex);
+      });
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.18 });
+    reveals.forEach((el) => revealObserver.observe(el));
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinks.forEach((link) => link.classList.remove('active'));
+          const id = entry.target.getAttribute('id');
+          const active = document.querySelector(`.nav a[href="#${id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0.45 });
+    sections.forEach((section) => navObserver.observe(section));
+
+    window.addEventListener('resize', () => updateHeroSlide(heroIndex));
+
+    bindStoryThumbs();
+    updateHeroSlide(heroIndex);
+    updateStory(storyIndex);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
